@@ -36,19 +36,17 @@ func newRepeaterTime(word string, opts *options) *repeaterTime {
 		return &repeaterTime{typ: tick{}}
 	}
 
-	// Split a bare digit-run into h[:m[:s]] the way the gem does.
+	// Split a bare digit-run into h[:m[:s]] the way the gem does. Mirrors
+	// RepeaterTime#initialize: it inserts the trailing two digits at index 1 and
+	// truncates parts[0], re-reading parts[0] fresh each step (never a stale copy).
 	if len(parts[0]) > 2 && len(parts) == 1 {
-		first := parts[0]
-		if len(first) > 4 {
-			secondIndex := len(first) - 2
-			parts = append(parts, first[secondIndex:])
-			// insert at index 1
-			parts = insertAt(parts, 1, first[secondIndex:])
-			parts[0] = first[:secondIndex]
-			first = parts[0]
+		if len(parts[0]) > 4 {
+			secondIndex := len(parts[0]) - 2
+			parts = insertAt(parts, 1, parts[0][secondIndex:])
+			parts[0] = parts[0][:secondIndex]
 		}
-		minuteIndex := len(first) - 2
-		parts = insertAt(parts, 1, first[minuteIndex:])
+		minuteIndex := len(parts[0]) - 2
+		parts = insertAt(parts, 1, parts[0][minuteIndex:])
 		parts[0] = parts[0][:minuteIndex]
 	}
 
