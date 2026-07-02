@@ -10616,5 +10616,554 @@
    "begin": "2006-08-16 09:00:00",
    "end": "2006-08-16 09:00:01"
   }
+ },
+ {
+  "phrase": "2/30/2016",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "4/31/2016",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2/29/2015",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "6/31/2016",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2/30",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2/30",
+  "opts": {
+   "context": "future"
+  },
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "4/31",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "4/31",
+  "opts": {
+   "context": "future"
+  },
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2/29",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2/29",
+  "opts": {
+   "context": "future"
+  },
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "5pm on may 27th",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2007-05-27 17:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2007-05-27 17:00:00",
+   "end": "2007-05-27 17:00:01"
+  }
+ },
+ {
+  "phrase": "9am on august 3rd",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-03 09:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-03 09:00:00",
+   "end": "2006-08-03 09:00:01"
+  }
+ },
+ {
+  "phrase": "noon on december 25th",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-12-25 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-12-25 12:00:00",
+   "end": "2006-12-25 12:00:01"
+  }
+ },
+ {
+  "phrase": "5 pm on may 27",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2007-05-27 17:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2007-05-27 17:00:00",
+   "end": "2007-05-27 17:00:01"
+  }
+ },
+ {
+  "phrase": "9 am on august 3",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-03 09:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-03 09:00:00",
+   "end": "2006-08-03 09:00:01"
+  }
+ },
+ {
+  "phrase": "5pm on february 30th",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "5 in the morning on may 27th",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2007-05-27 05:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2007-05-27 05:00:00",
+   "end": "2007-05-27 05:00:01"
+  }
+ },
+ {
+  "phrase": "6 in the evening on august 3rd",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-03 18:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-03 18:00:00",
+   "end": "2006-08-03 18:00:01"
+  }
+ },
+ {
+  "phrase": "3 5pm from now",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "2 noons ago",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "3 days before asdf",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-13 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-13 14:00:00",
+   "end": "2006-08-13 14:00:01"
+  }
+ },
+ {
+  "phrase": "3rd month in asdf",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "3rd day of asdf",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "this august",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-16 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-01 00:00:00",
+   "end": "2006-09-01 00:00:00"
+  }
+ },
+ {
+  "phrase": "3 weekdays from now",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-21 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-21 14:00:00",
+   "end": "2006-08-21 14:00:01"
+  }
+ },
+ {
+  "phrase": "3 weekdays from now",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-21 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-21 14:00:00",
+   "end": "2006-08-21 14:00:01"
+  }
+ },
+ {
+  "phrase": "2 weekdays ago",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2006-08-14 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-14 14:00:00",
+   "end": "2006-08-14 14:00:01"
+  }
+ },
+ {
+  "phrase": "2 weekdays ago",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-14 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-14 14:00:00",
+   "end": "2006-08-14 14:00:01"
+  }
+ },
+ {
+  "phrase": "last weekday",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-15 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-15 00:00:00",
+   "end": "2006-08-16 00:00:00"
+  }
+ },
+ {
+  "phrase": "next weekday",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-17 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-17 00:00:00",
+   "end": "2006-08-18 00:00:00"
+  }
+ },
+ {
+  "phrase": "this weekday",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-15 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-15 00:00:00",
+   "end": "2006-08-16 00:00:00"
+  }
+ },
+ {
+  "phrase": "2 weekends from now",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-26 00:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-26 00:00:00",
+   "end": "2006-08-26 00:00:01"
+  }
+ },
+ {
+  "phrase": "2 weekends from now",
+  "opts": {
+   "context": "future"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-26 00:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-26 00:00:00",
+   "end": "2006-08-26 00:00:01"
+  }
+ },
+ {
+  "phrase": "3 weekends ago",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-07-29 00:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-07-29 00:00:00",
+   "end": "2006-07-29 00:00:01"
+  }
+ },
+ {
+  "phrase": "3 weekends ago",
+  "opts": {
+   "context": "future"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-07-29 00:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-07-29 00:00:00",
+   "end": "2006-07-29 00:00:01"
+  }
+ },
+ {
+  "phrase": "2 fortnights from now",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-09-13 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-09-13 14:00:00",
+   "end": "2006-09-13 14:00:01"
+  }
+ },
+ {
+  "phrase": "3 fortnights ago",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-07-05 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-07-05 14:00:00",
+   "end": "2006-07-05 14:00:01"
+  }
+ },
+ {
+  "phrase": "in a fortnight",
+  "opts": {
+   "context": "past"
+  },
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "3 januaries from now",
+  "opts": {},
+  "guess": null,
+  "span": null
+ },
+ {
+  "phrase": "3 weeks from now",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-09-06 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-09-06 14:00:00",
+   "end": "2006-09-06 14:00:01"
+  }
+ },
+ {
+  "phrase": "2 weeks ago",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-02 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-02 14:00:00",
+   "end": "2006-08-02 14:00:01"
+  }
+ },
+ {
+  "phrase": "3 months from now",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-11-16 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-11-16 14:00:00",
+   "end": "2006-11-16 14:00:01"
+  }
+ },
+ {
+  "phrase": "2 years ago",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2004-08-16 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2004-08-16 14:00:00",
+   "end": "2004-08-16 14:00:01"
+  }
+ },
+ {
+  "phrase": "in 3 years",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2009-08-16 14:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2009-08-16 14:00:00",
+   "end": "2009-08-16 14:00:01"
+  }
+ },
+ {
+  "phrase": "noon",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-16 12:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-16 12:00:00",
+   "end": "2006-08-16 12:00:01"
+  }
+ },
+ {
+  "phrase": "midnight",
+  "opts": {
+   "context": "past"
+  },
+  "guess": {
+   "span": false,
+   "at": "2006-08-16 00:00:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2006-08-16 00:00:00",
+   "end": "2006-08-16 00:00:01"
+  }
+ },
+ {
+  "phrase": "2016-05-27T14:30:00+00:00",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2016-05-27 14:30:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2016-05-27 14:30:00",
+   "end": "2016-05-27 14:30:01"
+  }
+ },
+ {
+  "phrase": "2016-05-27T14:30:00Z",
+  "opts": {},
+  "guess": {
+   "span": false,
+   "at": "2016-05-27 14:30:00"
+  },
+  "span": {
+   "span": true,
+   "begin": "2016-05-27 14:30:00",
+   "end": "2016-05-27 14:30:01"
+  }
  }
 ]
