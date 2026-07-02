@@ -81,12 +81,15 @@ func (r *repeaterSeason) findNextSeasonSpan(dir int, nextSeason string) *Span {
 }
 
 func (r *repeaterSeason) findCurrentSeason(md miniDate) string {
-	for _, s := range seasonOrder {
+	// The four season ranges tile the year with no gaps, so any date not in the
+	// first three must be winter; returning the last season as the default keeps
+	// the logic total without an unreachable fall-through branch.
+	for _, s := range seasonOrder[:len(seasonOrder)-1] {
 		if md.isBetween(seasons[s].start, seasons[s].end) {
 			return s
 		}
 	}
-	return ""
+	return seasonOrder[len(seasonOrder)-1]
 }
 
 func (r *repeaterSeason) numSecondsTil(goal miniDate, dir int) int {

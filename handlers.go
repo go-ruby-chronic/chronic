@@ -396,10 +396,10 @@ func (p *parser) handleORR(tokens []*token, outerSpan *Span, opts *options) *Spa
 }
 
 func handleORSR(p *parser, tokens []*token, opts *options) *Span {
+	// The anchor is a single repeater token, which getAnchor always resolves to a
+	// non-nil span (the gem's `return unless outer_span` guarded a dynamically-nil
+	// case unreachable through this fixed single-token pattern).
 	outerSpan := p.getAnchor([]*token{tokens[3]}, opts)
-	if outerSpan == nil {
-		return nil
-	}
 	return p.handleORR(tokens[0:2], outerSpan, opts)
 }
 
@@ -474,12 +474,9 @@ func getRepeaters(tokens []*token) []repeater {
 	return reps
 }
 
-func monthOverflow(year, month, day int) (res bool) {
-	defer func() {
-		if recover() != nil {
-			res = false
-		}
-	}()
+func monthOverflow(year, month, day int) bool {
+	// The bounds guard makes the monthDays index always valid, so no recover is
+	// needed here (the gem's rescue guarded a different, dynamically-typed path).
 	if month < 1 || month > 12 {
 		return false
 	}

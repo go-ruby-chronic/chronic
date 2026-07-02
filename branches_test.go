@@ -55,39 +55,53 @@ func TestHandleSRPNotOffsetter(t *testing.T) {
 	}
 }
 
+// bogusGrabberTok builds a grabber token with an unrecognised symbol, so
+// getAnchor leaves its outer span nil (a clean, panic-free nil anchor).
+func bogusGrabberTok() *token {
+	tk := newToken("x")
+	tk.tag(&tag{class: tcGrabber, sym: "bogus"})
+	return tk
+}
+
 func TestHandleSRPADeadAnchor(t *testing.T) {
 	withUTC(t)
-	// getAnchor over an empty repeater slice panics on the head index; the arrow
-	// handlers guard against a nil anchor. We feed a repeater whose grabber makes
-	// the anchor resolvable, then a variant with no repeater to force nil.
 	p := newBranchParser()
-	// tokens[3:] has no repeater -> getAnchor should yield nil via panic-free path.
-	// We instead assert the guarded nil by giving a scalar+repeater+pointer plus an
-	// anchor tail that getAnchor cannot resolve (a lone grabber, no repeater).
+	// tokens[3:] = {bogus-grabber, repeater} -> getAnchor returns nil -> handler nil.
 	toks := []*token{
 		scalarTok(tcScalar, 3),
 		repTok(tcRepeaterDay, &repeaterDay{}),
 		pointerTok("future"),
-		func() *token { tk := newToken("x"); tk.tag(&tag{class: tcGrabber, sym: "this"}); return tk }(),
+		bogusGrabberTok(),
+		repTok(tcRepeaterDay, &repeaterDay{}),
 	}
-	defer func() { _ = recover() }() // getAnchor may panic on empty repeaters; recovered by parseToSpan in prod
 	if got := handleSRPA(p, toks, &options{}); got != nil {
-		t.Logf("handleSRPA = %v", got)
+		t.Errorf("handleSRPA(dead anchor) = %v, want nil", got)
 	}
 }
 
-func TestHandleORSRDeadAnchor(t *testing.T) {
+func TestHandleSRASRPADeadAnchor(t *testing.T) {
 	withUTC(t)
 	p := newBranchParser()
-	// ORSR anchor is tokens[3]; a grabber-only token cannot anchor -> nil.
+	// tokens[4:] = {bogus-grabber, repeater, repeater} -> nil anchor -> nil.
+	toks := []*token{
+		scalarTok(tcScalar, 3), repTok(tcRepeaterDay, &repeaterDay{}),
+		scalarTok(tcScalar, 2), repTok(tcRepeaterHour, &repeaterHour{}),
+		bogusGrabberTok(), repTok(tcRepeaterDay, &repeaterDay{}), repTok(tcRepeaterDay, &repeaterDay{}),
+	}
+	if got := handleSRASRPA(p, toks, &options{}); got != nil {
+		t.Errorf("handleSRASRPA(dead anchor) = %v, want nil", got)
+	}
+}
+
+func TestHandleORGRDeadAnchor(t *testing.T) {
+	withUTC(t)
+	p := newBranchParser()
+	// ORGR anchor is tokens[2:4] = {bogus-grabber, repeater} -> nil.
 	ord := newToken("x")
 	ord.tag(&tag{class: tcOrdinal, num: 1})
-	grab := newToken("x")
-	grab.tag(&tag{class: tcGrabber, sym: "this"})
-	toks := []*token{ord, repTok(tcRepeaterDay, &repeaterDay{}), newToken("in"), grab}
-	defer func() { _ = recover() }()
-	if got := handleORSR(p, toks, &options{}); got != nil {
-		t.Logf("handleORSR = %v", got)
+	toks := []*token{ord, repTok(tcRepeaterDay, &repeaterDay{}), bogusGrabberTok(), repTok(tcRepeaterMonth, &repeaterMonth{})}
+	if got := handleORGR(p, toks, &options{}); got != nil {
+		t.Errorf("handleORGR(dead anchor) = %v, want nil", got)
 	}
 }
 
@@ -115,6 +129,16 @@ func TestFindWithinNil(t *testing.T) {
 	// Empty tag list returns the span unchanged.
 	if got := findWithin(nil, outer, "future"); got != outer {
 		t.Error("findWithin(nil) should return the span")
+	}
+	// A repeater whose this() is covered by a wide outer span recurses and returns
+	// the narrowed span (covers the future setStart + cover-recurse arms).
+	wide := newSpan(time.Date(2006, 8, 1, 0, 0, 0, 0, time.UTC), time.Date(2006, 9, 1, 0, 0, 0, 0, time.UTC))
+	if got := findWithin([]repeater{&repeaterDay{}}, wide, "future"); got == nil {
+		t.Error("findWithin(day in month, future) = nil, want a span")
+	}
+	// The past pointer takes the setStart(span.End) arm.
+	if got := findWithin([]repeater{&repeaterDay{}}, wide, "past"); got == nil {
+		t.Error("findWithin(day in month, past) = nil, want a span")
 	}
 }
 
@@ -150,6 +174,32 @@ func TestHandleRmnOdOnLongForm(t *testing.T) {
 	od := scalarTok(tcOrdinalDay, 27)
 	if got := handleRmnOdOn(p, []*token{tm, dp, mn, od}, &options{context: "future"}); got == nil {
 		t.Error("handleRmnOdOn long form = nil, want a span")
+	}
+	// len(tokens) == 3 branch: time, month-name, ordinal-day (no day-portion).
+	// Use a fresh parser: dayOrTime mutates p.now on the long-form call above.
+	p2 := newBranchParser()
+	tm2 := repTok(tcRepeaterTime, newRepeaterTime("5", &options{}))
+	mn2 := repTok(tcRepeaterMonthName, newRepeaterMonthName("may"))
+	od2 := scalarTok(tcOrdinalDay, 27)
+	if got := handleRmnOdOn(p2, []*token{tm2, mn2, od2}, &options{context: "future"}); got == nil {
+		t.Error("handleRmnOdOn short form = nil, want a span")
+	}
+}
+
+func TestHandleSRASRPAMidNil(t *testing.T) {
+	withUTC(t)
+	p := newBranchParser()
+	// Layout matches the SRASRPA grammar after separator filtering:
+	// [scalar, rep, scalar, rep, pointer, anchor-repeater, anchor-repeater].
+	// The FIRST inner arrow's repeater is a non-offsetter time, so its handleSRP
+	// returns nil, exercising the mid-span nil guard.
+	toks := []*token{
+		scalarTok(tcScalar, 3), repTok(tcRepeaterTime, newRepeaterTime("5", &options{})),
+		scalarTok(tcScalar, 2), repTok(tcRepeaterHour, &repeaterHour{}),
+		pointerTok("future"), repTok(tcRepeaterDay, &repeaterDay{}), repTok(tcRepeaterMonth, &repeaterMonth{}),
+	}
+	if got := handleSRASRPA(p, toks, &options{context: "future"}); got != nil {
+		t.Errorf("handleSRASRPA(mid nil) = %v, want nil", got)
 	}
 }
 
@@ -227,11 +277,15 @@ func TestYearOffsetTimeLeapClamp(t *testing.T) {
 
 func TestMonthOffsetByLeapClamp(t *testing.T) {
 	withUTC(t)
-	// Jan 31 offset by one month clamps to the last day of February.
-	jan31 := time.Date(2005, 1, 31, 0, 0, 0, 0, time.UTC)
-	got := monthOffsetBy(jan31, 1, "future") // feb 2005 has 28 days
+	// Jan 31 offset by one month into a non-leap February clamps to the 28th.
+	got := monthOffsetBy(time.Date(2005, 1, 31, 0, 0, 0, 0, time.UTC), 1, "future")
 	if got.Month() != time.February || got.Day() != 28 {
-		t.Errorf("monthOffsetBy jan31 = %s, want feb 28", got)
+		t.Errorf("monthOffsetBy jan31 2005 = %s, want feb 28", got)
+	}
+	// Into a leap February the clamp lands on the 29th (leap-table arm).
+	gotL := monthOffsetBy(time.Date(2004, 1, 31, 0, 0, 0, 0, time.UTC), 1, "future")
+	if gotL.Month() != time.February || gotL.Day() != 29 {
+		t.Errorf("monthOffsetBy jan31 2004 = %s, want feb 29", gotL)
 	}
 }
 
@@ -241,6 +295,21 @@ func TestWeekdayNextPastFirst(t *testing.T) {
 	r.setStart(repeaterNow)
 	if s := r.next("past"); s == nil || !s.Begin.Before(repeaterNow) {
 		t.Errorf("weekday next(past) first = %v", s)
+	}
+	// From a Friday going forward, the next weekday skips Sat+Sun to Monday,
+	// exercising the isWeekday skip-loop. 2006-08-18 is a Friday.
+	rf := &repeaterWeekday{}
+	rf.setStart(time.Date(2006, 8, 18, 12, 0, 0, 0, time.UTC))
+	s := rf.next("future")
+	if s.Begin.Weekday() != time.Monday {
+		t.Errorf("weekday next(future) from Fri = %s, want Monday", s.Begin.Weekday())
+	}
+	// From a Monday going backward, the previous weekday skips Sun+Sat to Friday.
+	rp := &repeaterWeekday{}
+	rp.setStart(time.Date(2006, 8, 21, 12, 0, 0, 0, time.UTC)) // Monday
+	sp := rp.next("past")
+	if sp.Begin.Weekday() != time.Friday {
+		t.Errorf("weekday next(past) from Mon = %s, want Friday", sp.Begin.Weekday())
 	}
 }
 
@@ -275,6 +344,18 @@ func TestRepeaterTimeUnambiguousWithMinutesSeconds(t *testing.T) {
 	s := r.next("future")
 	if s.Begin.Hour() != 13 || s.Begin.Minute() != 5 || s.Begin.Second() != 7 {
 		t.Errorf("13:05:07 -> %s", s.Begin)
+	}
+}
+
+func TestRepeaterTimeSubseconds(t *testing.T) {
+	withUTC(t)
+	// A colon-separated 4-group time "13:05:07:250" splits into four parts, so the
+	// fourth group drives the subseconds parse arm (250/10^3 = 0.25).
+	r := newRepeaterTime("13:05:07:250", &options{})
+	// 0.250 seconds = 250ms; the tick seconds carry the fractional part.
+	frac := r.typ.seconds - float64(int(r.typ.seconds))
+	if frac < 0.24 || frac > 0.26 {
+		t.Errorf("subsecond fraction = %v, want ~0.25", frac)
 	}
 }
 
