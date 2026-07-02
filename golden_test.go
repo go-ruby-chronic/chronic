@@ -31,10 +31,10 @@ type goldenValue struct {
 
 // goldenOpts mirrors the Ruby option hash keys we vary in the corpus.
 type goldenOpts struct {
-	Context             string        `json:"context"`
-	Guess               interface{}   `json:"guess"`
-	EndianPrecedence    []interface{} `json:"endian_precedence"`
-	AmbiguousTimeRange  interface{}   `json:"ambiguous_time_range"`
+	Context            string        `json:"context"`
+	Guess              interface{}   `json:"guess"`
+	EndianPrecedence   []interface{} `json:"endian_precedence"`
+	AmbiguousTimeRange interface{}   `json:"ambiguous_time_range"`
 }
 
 type goldenVector struct {

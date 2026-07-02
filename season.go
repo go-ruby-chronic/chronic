@@ -54,7 +54,7 @@ var seasonOrder = []string{"spring", "summer", "autumn", "winter"}
 // Season.find_next_season.
 func findNextSeason(s string, pointer int) string {
 	idx := indexOf(seasonOrder, s)
-	next := ((idx + 1*pointer) % 4 + 4) % 4
+	next := ((idx+1*pointer)%4 + 4) % 4
 	return seasonOrder[next]
 }
 

@@ -92,7 +92,7 @@ func (r *repeaterSeason) findCurrentSeason(md miniDate) string {
 func (r *repeaterSeason) numSecondsTil(goal miniDate, dir int) int {
 	start := construct(r.now.Year(), int(r.now.Month()), r.now.Day())
 	seconds := 0
-	for !miniDateFromTime(start.Add(time.Duration(dir*seconds)*time.Second)).equals(goal) {
+	for !miniDateFromTime(start.Add(time.Duration(dir*seconds) * time.Second)).equals(goal) {
 		seconds += daySeconds
 	}
 	return seconds
