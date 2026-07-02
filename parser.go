@@ -16,19 +16,21 @@ type parser struct {
 // matched Span or nil. It recovers construct's day-overflow panic as nil, the
 // way the gem's rescue does.
 func parseToSpan(text string, opts *options) (result *Span) {
-	defer func() {
-		if r := recover(); r != nil {
-			if r == errDayOverflow {
-				result = nil
-				return
-			}
-			panic(r)
-		}
-	}()
+	defer func() { handleParsePanic(recover()) }()
 	opts.text = text
 	p := &parser{now: opts.now}
 	tokens := tokenizePipeline(text, opts)
 	return p.tokensToSpan(tokens, opts)
+}
+
+// handleParsePanic swallows the construct day-overflow sentinel (so the parse
+// yields nil, matching the gem's rescue) and re-raises anything else. It is
+// separated out so both arms are directly testable.
+func handleParsePanic(r any) {
+	if r == nil || r == errDayOverflow {
+		return
+	}
+	panic(r)
 }
 
 // tokenizePipeline ports Parser#tokenize: pre-normalise, tokenise, run every
