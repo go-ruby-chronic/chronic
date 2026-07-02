@@ -33,16 +33,17 @@ func numerize(s string) string {
 	for _, on := range ordinalNums {
 		s = on.re.ReplaceAllString(s, "<num>"+on.rep)
 	}
-	// ten-prefix + following single digit => sum
+	// ten-prefix + following single digit => sum. The gem uses a lookahead
+	// `(\d(?=[^\d]|$))*` so the boundary char is NOT consumed; RE2 has no
+	// lookahead, so we capture the trailing boundary separately and re-emit it.
 	for _, tp := range tenPrefixes {
-		re := regexp.MustCompile(`(?i)(?:` + tp.word + `) *<num>(\d(?:[^\d]|$))?`)
+		re := regexp.MustCompile(`(?i)(?:` + tp.word + `) *<num>(?:(\d)([^\d]|$))?`)
 		s = gsubFunc(re, s, func(g []string) string {
 			d := 0
 			if g[1] != "" {
-				// g[1] may carry the trailing boundary char; take leading digit.
-				d = atoi(g[1][:1])
+				d = atoi(g[1])
 			}
-			return "<num>" + strconv.Itoa(tp.val+d)
+			return "<num>" + strconv.Itoa(tp.val+d) + g[2]
 		})
 	}
 	for _, tp := range tenPrefixes {
