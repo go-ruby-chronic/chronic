@@ -223,6 +223,22 @@ func TestNumerizeBigPrefixWithDigit(t *testing.T) {
 	}
 }
 
+func TestNumerizePastThirtyTwoBits(t *testing.T) {
+	// 10^12 and its sums exceed a 32-bit int; every target must answer what
+	// Ruby (arbitrary-precision Integer) answers.
+	for in, want := range map[string]string{
+		"two trillion days":         "2000000000000 days",
+		"trillion days":             "1000000000000 days",
+		"one trillion and five":     "1000000000005",
+		"five billion days":         "5000000000 days",
+		"three trillion and a half": "3000000000000.5",
+	} {
+		if got := numerize(in); got != want {
+			t.Errorf("numerize(%q) = %q, want %q", in, got, want)
+		}
+	}
+}
+
 func TestAnditionBoundaryAndOrder(t *testing.T) {
 	// "<num>100 <num>5" with g1 longer than g3 additions.
 	if got := andition("<num>100 <num>5"); got != "<num>105" {

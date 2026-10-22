@@ -50,8 +50,9 @@ jobs:
           awk -v t="$cov" 'BEGIN { exit !(t+0 >= 100.0) }' || {
             echo "::error::coverage ${cov}% < 100%"; exit 1; }
 
-  # Validate the library on the six supported 64-bit targets. amd64/arm64 run
-  # natively; the rest run the suite under qemu-user. The oracle tests skip under
+  # Validate the library on the six supported 64-bit targets and on 32-bit
+  # 386 and arm. amd64/arm64/386 run natively; the rest run the suite under
+  # qemu-user. The oracle tests skip under
   # qemu (no target-arch ruby), so this checks the parser itself. CGO=0.
   arch-native:
     name: arch ${{ matrix.label }}
@@ -84,6 +85,8 @@ jobs:
           - { goarch: loong64, qemu: qemu-loongarch64-static }
           - { goarch: ppc64le, qemu: qemu-ppc64le-static }
           - { goarch: s390x,   qemu: qemu-s390x-static }
+          # 32-bit: int is 32 bits.
+          - { goarch: arm,     qemu: qemu-arm-static }
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
@@ -92,6 +95,24 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y qemu-user-static
       - name: Test under qemu (${{ matrix.goarch }})
         run: GOARCH=${{ matrix.goarch }} go test -exec=${{ matrix.qemu }} ./...
+
+  # 386 runs natively on the amd64 runner (the kernel executes 32-bit x86
+  # binaries), not under qemu-i386, whose emulation loses x87/SSE state across
+  # preemption.
+  arch-386:
+    name: arch 386
+    runs-on: ubuntu-latest
+    env:
+      CGO_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: 1.27.2
+      - name: Vet + test (GOARCH=386)
+        run: |
+          GOARCH=386 go vet ./...
+          GOARCH=386 go test ./...
 
   wasm:
     name: wasm (${{ matrix.goos }}/wasm)
