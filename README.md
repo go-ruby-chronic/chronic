@@ -43,7 +43,9 @@ t, _ := chronic.Parse("tomorrow", chronic.Options{Now: now})
 
 `go test ./...` runs the unit, golden and differential-oracle suites. The CI
 gate enforces **100% statement coverage** and builds/tests on all six 64-bit Go
-targets — `amd64`, `arm64`, `riscv64`, `loong64`, `ppc64le`, `s390x`.
+targets — `amd64`, `arm64`, `riscv64`, `loong64`, `ppc64le`, `s390x` — and on
+the 32-bit `386` and `arm`, where number words up to "trillion" (10^12) are
+computed at 64 bits exactly as on 64-bit targets.
 
 ## License
 
@@ -53,7 +55,7 @@ BSD-3-Clause. Copyright (c) the go-ruby-chronic/chronic authors.
 
 Being pure Go (CGO=0), this library also compiles to **WebAssembly** — both
 `GOOS=js GOARCH=wasm` (browser / Node.js) and `GOOS=wasip1 GOARCH=wasm` (WASI).
-CI builds both targets on every push, alongside the six 64-bit native/qemu arches.
+CI builds both targets on every push, alongside the native/qemu architecture lanes.
 
 ```sh
 GOOS=js     GOARCH=wasm go build ./...   # browser / Node

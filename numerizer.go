@@ -54,16 +54,16 @@ func numerize(s string) string {
 		re := regexp.MustCompile(`(?i)(?:<num>)?(\d*) *` + bp.word)
 		s = gsubFunc(re, s, func(g []string) string {
 			if g[1] == "" {
-				return strconv.Itoa(bp.val)
+				return strconv.FormatInt(bp.val, 10)
 			}
-			return "<num>" + strconv.Itoa(bp.val*atoi(g[1]))
+			return "<num>" + strconv.FormatInt(bp.val*atoi64(g[1]), 10)
 		})
 		s = andition(s)
 	}
 	// fractional addition for the stashed "a half".
 	reHalf := regexp.MustCompile(`(?i)(\d+)(?: | and |-)*haAlf`)
 	s = gsubFunc(reHalf, s, func(g []string) string {
-		return strconv.FormatFloat(float64(atoi(g[1]))+0.5, 'f', -1, 64)
+		return strconv.FormatFloat(float64(atoi64(g[1]))+0.5, 'f', -1, 64)
 	})
 
 	return strings.ReplaceAll(s, "<num>", "")
@@ -140,9 +140,10 @@ var tenPrefixes = []struct {
 	{"sixty", 60}, {"seventy", 70}, {"eighty", 80}, {"ninety", 90},
 }
 
+// bigPrefixes carries int64: "trillion" (10^12) does not fit a 32-bit int.
 var bigPrefixes = []struct {
 	word string
-	val  int
+	val  int64
 }{
 	{"hundred", 100}, {"thousand", 1000}, {"million", 1_000_000},
 	{"billion", 1_000_000_000}, {"trillion", 1_000_000_000_000},
@@ -172,7 +173,7 @@ func andition(s string) string {
 		sep := s[loc[4]:loc[5]]
 		g3 := s[loc[6]:loc[7]]
 		if strings.Contains(sep, "and") || len(g1) > len(g3) {
-			s = s[:loc[0]] + "<num>" + strconv.Itoa(atoi(g1)+atoi(g3)) + s[loc[1]:]
+			s = s[:loc[0]] + "<num>" + strconv.FormatInt(atoi64(g1)+atoi64(g3), 10) + s[loc[1]:]
 			continue
 		}
 		return s
